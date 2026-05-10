@@ -63,13 +63,13 @@ choice = input("\nChoice (default = 1): ")
 
 if choice == "1":
     sigmas = linear(steps, start_sigma, end_sigma)
-    title = "Linear"
+    title = f"Linear decay from {start_sigma} to {end_sigma}"
 
 elif choice == "2":
     print("\nStrength: 0 = Linear, <0 = Concave (Drop), >0 = Convex (Bulge)")
     val = float(input("Strength (default = 0): ") or 0.0)
     sigmas = hybrid_msaf_curve(steps, start_sigma, end_sigma, val)
-    title = f"Exponential (Model Sampling Aura Flow simulation; Strength={val})"
+    title = f"Exponential, strength: {val} (Model Sampling Aura Flow simulation)"
 
 elif choice == "3":
     v = float(input("Plateau value (default = 0.3): ") or 0.3)
@@ -99,16 +99,16 @@ elif choice == "3":
     base_decay = np.linspace(start_sigma, end_sigma, steps + 1)
     sigmas = base_decay * (1 - final_mask) + v * final_mask
     sigmas[0], sigmas[-1] = start_sigma, end_sigma
-    title = f"Smooth Plateau ({v}) range [{ps}:{steps-pe}]"
+    title = f"Plateau at {v}, steps {ps} to {steps-pe}, smoothness: {sh}"
 
 elif choice == "4":
     sh = float(input("Sharpness (default = 5): ") or 5)
     sigmas = s_curve(steps, start_sigma, end_sigma, sh)
-    title = "Sigmoid"
+    title = f"Sigmoid curve, sharpness: {sh}"
 
 else:
     sigmas = linear(steps, start_sigma, end_sigma)
-    title = "Linear"
+    title = f"Linear decay from {start_sigma} to {end_sigma}"
 
 # Output and Clipboard
 clean_list = ", ".join([f"{s:.4f}" for s in sigmas])
