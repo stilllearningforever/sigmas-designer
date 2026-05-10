@@ -51,25 +51,25 @@ def plot_sigmas(sigmas, title):
 
 # === MAIN PROGRAM ===
 print("=" * 50)
-print("  SIGMA DESIGNER v1.9.7 (Integer X-Axis Fix)")
+print("  SIGMA DESIGNER v1")
 print("=" * 50)
 
 steps = int(input("\nNumber of steps (default = 6): ") or 6)
 start_sigma = float(input("Start sigma (default = 0.55): ") or 0.55)
 end_sigma = 0.0
 
-print(f"\n1: Linear | 2: MSAF Hybrid | 3: Plateau | 4: Sigmoid")
+print(f"\n1: Linear | 2: Exponential (MSAF simulator) | 3: Plateau | 4: Sigmoid")
 choice = input("\nChoice (default = 1): ")
 
 if choice == "1":
     sigmas = linear(steps, start_sigma, end_sigma)
-    title = "Linear Decay"
+    title = "Linear"
 
 elif choice == "2":
     print("\nStrength: 0 = Linear, <0 = Concave (Drop), >0 = Convex (Bulge)")
     val = float(input("Strength (default = 0): ") or 0.0)
     sigmas = hybrid_msaf_curve(steps, start_sigma, end_sigma, val)
-    title = f"MSAF Hybrid (Strength={val})"
+    title = f"Exponential (Model Sampling Aura Flow simulation; Strength={val})"
 
 elif choice == "3":
     v = float(input("Plateau value (default = 0.3): ") or 0.3)
@@ -99,16 +99,16 @@ elif choice == "3":
     base_decay = np.linspace(start_sigma, end_sigma, steps + 1)
     sigmas = base_decay * (1 - final_mask) + v * final_mask
     sigmas[0], sigmas[-1] = start_sigma, end_sigma
-    title = f"Strict Smooth Plateau ({v}) range [{ps}:{steps-pe}]"
+    title = f"Smooth Plateau ({v}) range [{ps}:{steps-pe}]"
 
 elif choice == "4":
     sh = float(input("Sharpness (default = 5): ") or 5)
     sigmas = s_curve(steps, start_sigma, end_sigma, sh)
-    title = "Sigmoid S-Curve"
+    title = "Sigmoid"
 
 else:
     sigmas = linear(steps, start_sigma, end_sigma)
-    title = "Default Linear"
+    title = "Linear"
 
 # Output and Clipboard
 clean_list = ", ".join([f"{s:.4f}" for s in sigmas])
@@ -116,7 +116,7 @@ print("\n" + "="*50 + "\n" + clean_list + "\n" + "="*50)
 
 try:
     subprocess.run(['clip.exe'], input=clean_list, text=True, check=True)
-    print("Values copied to clipboard.")
+    print("Sigmas values copied to clipboard.")
 except:
     pass
 
